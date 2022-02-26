@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import {COAP_LED, COAP_NODE_STATE, getCoapLedStatus} from './coap.mjs';
+import {getCoapLedStatus, getPIRStatus, getMicStatus} from './coap.mjs';
 
 const TOPOLOGY_ROUTE = 'http://localhost:80/topology';
 
@@ -14,8 +14,12 @@ setInterval( async () => {
     console.log('COAP Requests: {');
     for(let i=0; i<ipList.length-1; i++) {
         console.log('  COAP Node:',ipList[i]);
-        let ledStates = getCoapLedStatus(ipList[i]);
-        console.log('    -', ledStates);
+        // let ledStates = getCoapLedStatus(ipList[i]);
+        let pirState = getPIRStatus(ipList[i])
+        let micVal = getMicStatus(ipList[i])
+        // console.log('    -ledStates:', ledStates);
+        console.log('    - pirState:', pirState);
+        console.log('    - micVal:', micVal);
     }
     console.log('}\n');
 }, 2000);
