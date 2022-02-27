@@ -1,4 +1,4 @@
-import coap from 'coap';
+const coap = require('coap');
 
 const ledPath = "/led"
 const pirPath = "/pir"
@@ -21,17 +21,17 @@ const getOptions = {
   options: {},
 };
 
-export const COAP_LED = {
+const COAP_LED = {
   RED: 0x0,
   GREEN: 0x1,
 };
 
-export const COAP_NODE_STATE = {
+const COAP_NODE_STATE = {
   ON: 0x0,
   OFF: 0x1,
 };
 
-export function getCoapLedStatus(targetIP) {
+function getCoapLedStatus(targetIP) {
   getOptions.host = targetIP;
   getOptions.pathname = ledPath;
   const getRequest = coap.request(getOptions);
@@ -45,37 +45,37 @@ export function getCoapLedStatus(targetIP) {
   return ledStates;
 }
 
-export function getPIRStatus(targetIP) {
+function getPIRStatus(targetIP) {
   getOptions.host = targetIP;
   getOptions.pathname = pirPath;
   const getRequest = coap.request(getOptions);
 
   getRequest.on('response', (getResponse) => {
-    // console.log(getResponse);
-    let on = !!getResponse.payload.readUInt8(0);
-    if(on) {
-      pirVal = "Detected"
-    } else {
-      pirVal = "Not Detected"
-    }
+    //console.log(getResponse);
+    pirVal = getResponse.payload.readUInt8(0);
+
   });
 
   getRequest.end();
   return pirVal;
 }
 
-export function getMicStatus(targetIP) {
+function getMicStatus(targetIP) {
   getOptions.host = targetIP;
   getOptions.pathname = micPath;
   const getRequest = coap.request(getOptions);
 
   getRequest.on('response', (getResponse) => {
-    // console.log(getResponse);
+    //console.log(getResponse);
     micVal = getResponse.payload.readFloatLE(0);
   });
 
   getRequest.end();
   return micVal;
+}
+
+module.exports = {
+  getMicStatus, getPIRStatus, getCoapLedStatus
 }
 
 // export function updateCoapLed(targetIP, ledType, shouldIlluminate) {

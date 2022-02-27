@@ -1,8 +1,10 @@
 {
   "dependencies": {
+    "@influxdata/influxdb-client": "^1.23.0",
+    "@influxdata/influxdb-client-apis": "^1.23.0",
     "buffer": "^6.0.3",
     "coap": "^1.0.3",
-    "node-fetch": "^3.2.0"
+    "node-fetch": "^2.6.7"
   },
   "name": "coap_test",
   "version": "1.0.0",

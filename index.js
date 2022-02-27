@@ -1,16 +1,16 @@
-import fetch from 'node-fetch';
-import {getCoapLedStatus, getPIRStatus, getMicStatus} from './coap.mjs';
+const fetch =require('node-fetch');
+const {getCoapLedStatus, getPIRStatus, getMicStatus} = require('./coap.js');
 
 // ipList and topology
-const TOPOLOGY_ROUTE = 'http://localhost:80/topology';
+const TOPOLOGY_ROUTE = 'http://localhost:4000/topology';
 let ipList = [];
 
 // Database variables
 const {InfluxDB, Point} = require('@influxdata/influxdb-client')
 const url = 'https://us-east-1-1.aws.cloud2.influxdata.com'
-const token = "8MkGu8tDM4AHKB69seAD_2mkaOxYlO7CR0xVP-UcQIkI2GnWJwiZ1TkLEq9nrHmjbU4Rj_BmsfarBqenAcjO7w=="
+const token = "OUuCncH4-9COxLt2O-XNljDWctyAQtmb2A24pMJbugGTmpFkoT_aTXszOg198UZjgTF6wAAseb-UQ_Z52GxbCw=="
 const org = 'rmm180000@utdallas.edu'
-const bucket = 'mock_I'
+const bucket = 'mock_II'
 
 // links to the influx database indicated by the url using the token
 const database = new InfluxDB({
@@ -46,13 +46,15 @@ setInterval( async () => {
         console.log('    - pirState:', pirState);
         console.log('    - micVal:', micVal);
 
-        // Convert to datapoints
-        let datapointMotion = PointMotion(pirState, ipList[i])
-        let datapointNoise = PointNoise(micVal, ipList[i])
-
         // Send to database
-        PlotPoint(datapointMotion)
-        PlotPoint(datapointNoise)
+        if(pirState !== undefined) {
+          let datapointMotion = PointMotion(pirState, ipList[i])
+          PlotPoint(datapointMotion)
+        }
+        if(micVal !== undefined) {
+          let datapointNoise = PointNoise(micVal, ipList[i])
+          PlotPoint(datapointNoise)
+        }
     }
     console.log('}\n');
 }, dataPollInt);
