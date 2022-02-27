@@ -1,6 +1,10 @@
 import fetch from 'node-fetch';
 import {getCoapLedStatus, getPIRStatus, getMicStatus} from './coap.mjs';
 
+// ipList and topology
+const TOPOLOGY_ROUTE = 'http://localhost:80/topology';
+let ipList = [];
+
 // Database variables
 const {InfluxDB, Point} = require('@influxdata/influxdb-client')
 const url = 'https://us-east-1-1.aws.cloud2.influxdata.com'
@@ -18,9 +22,6 @@ const database = new InfluxDB({
 const writeApi = database.getWriteApi(org, bucket)
 writeApi.useDefaultTags({host: 'host1'})
 
-const TOPOLOGY_ROUTE = 'http://localhost:80/topology';
-let ipList = [];
-
 // Interval between data collection
 const dataPollInt = 2000
 
@@ -34,21 +35,21 @@ setInterval( async () => {
     console.log('COAP Requests: {');
     for(let i=0; i<ipList.length-1; i++) {
         console.log('  COAP Node:',ipList[i]);
-        
+
         // Get data from nodes
         // let ledStates = getCoapLedStatus(ipList[i]);
         let pirState = getPIRStatus(ipList[i])
         let micVal = getMicStatus(ipList[i])
-        
+
         // Print data from nodes
         // console.log('    -ledStates:', ledStates);
         console.log('    - pirState:', pirState);
         console.log('    - micVal:', micVal);
-        
+
         // Convert to datapoints
         let datapointMotion = PointMotion(pirState, ipList[i])
         let datapointNoise = PointNoise(micVal, ipList[i])
-        
+
         // Send to database
         PlotPoint(datapointMotion)
         PlotPoint(datapointNoise)
