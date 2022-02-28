@@ -1,12 +1,12 @@
-const fetch =require('node-fetch');
-const {getCoapLedStatus, getPIRStatus, getMicStatus} = require('./coap.js');
+import fetch from 'node-fetch';
+import {getCoapLedStatus, getPIRStatus, getMicStatus} from './coap.js';
 
 // ipList and topology
-const TOPOLOGY_ROUTE = 'http://localhost:4000/topology';
+const TOPOLOGY_ROUTE = 'http://localhost:80/topology';
 let ipList = [];
 
 // Database variables
-const {InfluxDB, Point} = require('@influxdata/influxdb-client')
+import {InfluxDB, Point} from '@influxdata/influxdb-client'
 const url = 'https://us-east-1-1.aws.cloud2.influxdata.com'
 const token = "OUuCncH4-9COxLt2O-XNljDWctyAQtmb2A24pMJbugGTmpFkoT_aTXszOg198UZjgTF6wAAseb-UQ_Z52GxbCw=="
 const org = 'rmm180000@utdallas.edu'

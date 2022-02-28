@@ -1,4 +1,4 @@
-const coap = require('coap');
+import coap from 'coap';
 
 const ledPath = "/led"
 const pirPath = "/pir"
@@ -74,7 +74,7 @@ function getMicStatus(targetIP) {
   return micVal;
 }
 
-module.exports = {
+export {
   getMicStatus, getPIRStatus, getCoapLedStatus
 }
 
